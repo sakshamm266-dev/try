@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Story Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        .words-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        .story-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin-right: 10px;
+            width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .word-chip {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 3px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+        .clear-btn {
+            background-color: #f44336;
+        }
+        .clear-btn:hover {
+            background-color: #da190b;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .error {
+            color: #f44336;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Story Generator</h1>
+        
+        <div class="input-section">
+            <input type="text" id="wordInput" placeholder="Enter a word" onkeypress="handleKeyPress(event)">
+            <button onclick="addWord()">Add Word</button>
+        </div>
+
+        <div class="words-section">
+            <h3>Your Words:</h3>
+            <div id="wordsList"></div>
+            <button class="clear-btn" onclick="clearWords()">Clear Words</button>
+        </div>
+
+        <button onclick="generateStory()">Generate Story</button>
+
+        <div class="story-section">
+            <h3>Generated Story:</h3>
+            <p id="storyOutput"></p>
+        </div>
+    </div>
+
+    <script>
+        let words = [];
+        const templates = [
+            "Once upon a time, there was {0} who loved {1}. One day, they found a magical {2} that could {3}. This led to an adventure with {4}, and in the end, they learned about {5}.",
+            "In a distant land of {0}, there lived {1}. They had a special {2} that could {3}. Together with {4}, they discovered the true meaning of {5}.",
+            "Deep in the heart of {0}, {1} discovered a mysterious {2}. It had the power to {3}. With the help of {4}, they used this power to bring {5} to the world."
+        ];
+
+        function addWord() {
+            const input = document.getElementById('wordInput');
+            const word = input.value.trim();
+            
+            if (word) {
+                words.push(word);
+                updateWordsList();
+                input.value = '';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                addWord();
+            }
+        }
+
+        function updateWordsList() {
+            const wordsList = document.getElementById('wordsList');
+            wordsList.innerHTML = '';
+            words.forEach((word, index) => {
+                const chip = document.createElement('span');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+                wordsList.appendChild(chip);
+            });
+        }
+
+        function clearWords() {
+            words = [];
+            updateWordsList();
+            document.getElementById('storyOutput').textContent = '';
+        }
+
+        function generateStory() {
+            if (words.length < 6) {
+                alert('Please enter at least 6 words to generate a story!');
+                return;
+            }
+
+            const template = templates[Math.floor(Math.random() * templates.length)];
+            const story = template.replace(/\{(\d+)\}/g, (match, number) => words[number] || '');
+            
+            document.getElementById('storyOutput').textContent = story;
+        }
+    </script>
+</body>
+</html>
